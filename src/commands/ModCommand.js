@@ -15,6 +15,7 @@ export default {
         spamsmiliesdetect: { key: 'spamSmiliesDetect', type: 'toggle' },
         linkdetect: { key: 'linkDetect', type: 'toggle' },
         openaidetect: { key: 'openAiDetect', type: 'toggle' },
+        impersonationdetect: { key: 'impersonationDetect', type: 'toggle' },
         status: { key: 'modFilters', type: 'toggle' }
     },
 
@@ -47,14 +48,14 @@ export default {
         // Link whitelist
         if (optionLower === 'linkwhitelist') {
             if (!rest.length) {
-                const wl = opts.linkWhitelist && opts.linkWhitelist.length > 0 ? opts.linkWhitelist : 'nenhuma';
-                return await bot.reply('Whitelist: ' + wl, xatID, from);
+                const wl = opts.linkWhitelist && opts.linkWhitelist.length > 0 ? opts.linkWhitelist : 'Egyik sem';
+                return await bot.reply('Fehérlista (Whitelist): ' + wl, xatID, from);
             }
             const [action, ...linkParts] = rest;
             const link = linkParts.join(' ');
 
             if (!action || !['add', 'remove'].includes(action.toLowerCase()) || !link)
-                return await bot.reply('Use: !mod linkwhitelist add|remove [link]', xatID, from);
+                return await bot.reply('Használat: !mod linkwhitelist add|remove [link]', xatID, from);
 
             const currentList = opts.linkWhitelist ? opts.linkWhitelist.split(',') : [];
             
@@ -74,11 +75,11 @@ export default {
             
             if (config.type === 'number') {
                 if (!/^[0-9]+$/.test(value))
-                    return await bot.reply('Must be a number.', xatID, from);
+                    return await bot.reply('Ide egy számot kell megadnod.', xatID, from);
                 updateObj[config.key] = parseInt(value);
             } else if (config.type === 'toggle') {
                 if (!['on', 'off'].includes(value.toLowerCase()))
-                    return await bot.reply('Must be "on" or "off".', xatID, from);
+                    return await bot.reply('Az érték csak "on" (be) vagy "off" (ki) lehet.', xatID, from);
                 updateObj[config.key] = value.toLowerCase() === 'on';
             }
         } 
@@ -86,14 +87,14 @@ export default {
         // Invalid option
         else {
             return await bot.reply(
-                'Available options: ' + Object.keys(this.options).concat('linkwhitelist').join(', '),
+                'Elérhető beállítások: ' + Object.keys(this.options).concat('linkwhitelist').join(', '),
                 xatID,
                 from
             );
         }
 
         await bot.updateDb(updateObj);
-        await bot.reply('Settings updated.', xatID, from);
+        await bot.reply('Moderációs beállítások frissítve.', xatID, from);
         await bot.restart();
     }
 };
