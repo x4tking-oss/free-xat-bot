@@ -58,6 +58,14 @@ export const Settings = sequelize.define("settings", {
         type: DataTypes.BOOLEAN,
         defaultValue: true
     },
+    impersonationDetect: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+    },
+    protectedNames: {
+        type: DataTypes.STRING,
+        defaultValue: "admin,tulajdonos,x4tking" // Ide írd kisbetűvel a védendő neveket, vesszővel elválasztva!
+    },
     linkWhitelist: {
         type: DataTypes.STRING,
         defaultValue: "xat.wiki,xatblog.net,xatimg.com,xat.com,google.com,facebook.com,instagram.com,twitter.com,discord.gg,youtube.com"
@@ -68,7 +76,7 @@ export const Settings = sequelize.define("settings", {
     },
     welcome_msg: {
         type: DataTypes.STRING,
-        defaultValue: "Welcome to {chatname}, {name}!"
+        defaultValue: "Üdvözlünk a(z) {chatname} chaten, {name}!"
     },
     welcome_type: {
         type: DataTypes.STRING,
