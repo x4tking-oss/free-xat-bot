@@ -355,7 +355,7 @@ export class Bot {
             const text = message.replace(/\s*\([^)]*\)/g, '').trim();
             const caps = (text.match(/\b[A-Z]{2,}\b/g) || []).length;
             if (caps > capsLockMax)
-                reason = `Too many words in caps (${caps}/${capsLockMax} allowed)`;
+                reason = `Túl sok nagybetű (engedélyezett: ${caps}/${capsLockMax})`;
         }
 
         // Detect flood
@@ -373,7 +373,7 @@ export class Bot {
 
             if (this.state.usersFlood[userId] > linesMax) {
                 this.state.usersFlood[userId] = 0;
-                reason = `Flood detected: limit is ${linesMax} consecutive messages`;
+                reason = `Floodolás észlelve: a limit ${linesMax} egymást követő üzenet`;
             }
         }
 
@@ -383,7 +383,7 @@ export class Bot {
             for (const word of text.split(' ')) {
                 const w = word.toLowerCase().replace(/[- =+*~.,?!|&%\[\]{}k]/g, '');
                 if (w && new RegExp(`(.)\\1{${maxLetters},}`).test(w)) {
-                    reason = `Repeated letters detected (max ${maxLetters} consecutive)`;
+                    reason = `Ismétlődő betűk észlelve (max ${maxLetters} egymás után)`;
                     break;
                 }
             }
@@ -401,7 +401,7 @@ export class Bot {
                 }
             }
             if (smilieCount > maxSmilies)
-                reason = `Too many smilies. Limit is ${maxSmilies} per message`;
+                reason = `Túl sok smiley. A limit ${maxSmilies} üzenetenként`;
         }
 
         // Detect links
@@ -410,7 +410,7 @@ export class Bot {
             let allowed = false;
             for (const wl of linkWhitelist) if (wl && text.includes(wl)) allowed = true;
             if (!allowed && /(https?:\/\/|www\.|[a-z0-9-]+\.[a-z]{2,})/i.test(text))
-                reason = "Links are not allowed in chat";
+                reason = "A linkek használata nem engedélyezett a chaten";
         }
 
         // Detect inappropriate language
@@ -429,7 +429,7 @@ export class Bot {
                     pattern = new RegExp(`\\b${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'iu');
                 }
                 if (pattern.test(msgNorm)) {
-                    reason = `Inappropriate language detected`;
+                    reason = `Nem megfelelő nyelvezet észlelve`;
                     break;
                 }
             }
@@ -479,7 +479,7 @@ export class Bot {
 
         if (!hasPermission) {
             this.reply(
-                "You can not use this command.",
+                "Nincs jogosultságod a parancs használatához.",
                 uid,
                 from === "main" ? "pm" : from
             );
